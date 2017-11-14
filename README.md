@@ -18,5 +18,4 @@ You must setup the following variables:
 
 
 
-
 [ELK]: https://www.elastic.co/

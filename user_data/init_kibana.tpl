@@ -1,6 +1,6 @@
 #!/bin/bash
 sudo apt-get update
-sudo apt-get upgrade
+sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 sudo apt-get update
 sudo apt-get install apt-transport-https

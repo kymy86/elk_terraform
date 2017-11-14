@@ -1,6 +1,6 @@
 #!/bin/bash
-apt-get update
-apt-get upgrade
+sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade
 sudo apt-get install openjdk-8-jre -y
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 sudo apt-get update
