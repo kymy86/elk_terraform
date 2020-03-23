@@ -1,6 +1,6 @@
 # Terraform script to build ELK stack in AWS ![version][version-badge]
 
-[version-badge]: https://img.shields.io/badge/version-0.0.1-blue.svg
+[version-badge]: https://img.shields.io/badge/version-0.0.2-blue.svg
 
 With this Terraform script, you can set up an [ELK] stack.
 

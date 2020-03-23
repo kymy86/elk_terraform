@@ -1,7 +1,7 @@
 resource "aws_security_group" "elk_sc_default" {
     name = "elk_default_security_group"
     description = "Main security group for instances in public subnet"
-    vpc_id = "${var.vpc_id}"
+    vpc_id = var.vpc_id
 
     ingress {
         from_port = 5601
@@ -17,7 +17,7 @@ resource "aws_security_group" "elk_sc_default" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 
-    tags {
+    tags = {
         Name = "ELK default security group"
     }
 }
@@ -25,7 +25,7 @@ resource "aws_security_group" "elk_sc_default" {
 resource "aws_security_group" "elk_sc_esearch" {
     name = "elk_esearch_security_group"
     description = "Security group for Elasticsearch instance"
-    vpc_id = "${var.vpc_id}"
+    vpc_id = var.vpc_id
 
     ingress {
         from_port = 0
@@ -41,7 +41,7 @@ resource "aws_security_group" "elk_sc_esearch" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 
-    tags {
+    tags = {
         Name = "ELK default security group"
     }
 }
@@ -49,7 +49,7 @@ resource "aws_security_group" "elk_sc_esearch" {
 resource "aws_security_group" "elasticsearch" {
     name = "elasticsearch_security_group"
     description = "Security group for elasticsearch cluster"
-    vpc_id = "${var.vpc_id}"
+    vpc_id = var.vpc_id
 
     ingress {
         from_port = 9200
@@ -65,7 +65,7 @@ resource "aws_security_group" "elasticsearch" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 
-    tags {
+    tags = {
         Name = "Elasticsearch default security groups"
     }
 }
