@@ -1,11 +1,11 @@
 variable "vpc_id" {
-    type = "string"
+    type = string
 }
 
 variable "private_vpc_cidr" {
-    type = "string"
+    type = string
 }
 
 variable "public_vpc_cidr" {
-    type = "string"
+    type = string
 }

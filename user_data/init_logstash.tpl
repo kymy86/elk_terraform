@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade
 sudo apt-get install openjdk-8-jre -y
