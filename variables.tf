@@ -8,16 +8,8 @@ variable "aws_profile" {
   default     = "default"
 }
 
-variable "aws_amis" {
-  default = {
-    eu-west-1 = "ami-035966e8adab4aaad"
-    us-west-2 = "ami-0d1cd67c26f5fca19"
-    us-east-1 = "ami-07ebfd5b3428b6f4d"
-  }
-}
-
 variable "elk_instance_type" {
-  default = "m4.large"
+  default = "m5.large"
 }
 
 variable "aws_public_key_path" {

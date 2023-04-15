@@ -4,9 +4,9 @@ resource "aws_iam_role" "elasticsearch" {
 }
 
 resource "aws_iam_role_policy" "elasticsearch" {
-  name     = "elk_policy"
-  policy   = file("${path.module}/policies/policy.json")
-  role     = aws_iam_role.elasticsearch.id
+  name   = "elk_policy"
+  policy = file("${path.module}/policies/policy.json")
+  role   = aws_iam_role.elasticsearch.id
 }
 
 resource "aws_iam_instance_profile" "elasticsearch" {

@@ -23,78 +23,85 @@ module "security" {
   public_vpc_cidr  = module.network.elk_public_subnet_cidr
 }
 
-data "template_file" "init_elasticsearch" {
-  template = file("./user_data/init_esearch.tpl")
+data "aws_ami" "aws_amis" {
+  most_recent = true
 
-  vars = {
-    elasticsearch_cluster  = var.elasticsearch_cluster
-    elasticsearch_data_dir = var.elasticsearch_data_dir
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-*"]
   }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  owners = ["099720109477"]
 }
 
 resource "aws_instance" "elasticsearch" {
-  ami           = var.aws_amis[var.aws_region]
-  instance_type = var.elk_instance_type
-  key_name      = var.aws_key_name
+  ami                  = data.aws_ami.aws_amis.id
+  instance_type        = var.elk_instance_type
+  key_name             = var.aws_key_name
   security_groups      = [module.security.elasticsearch_sc_id]
   subnet_id            = module.network.elk_private_subnet_id
   iam_instance_profile = module.iam.es_iam_id
 
   ebs_block_device {
     device_name = "/dev/sdb"
-    volume_type = "io1"
+    volume_type = "io2"
     volume_size = "20"
     iops        = "500"
   }
 
-  user_data = data.template_file.init_elasticsearch.rendered
+  user_data = templatefile(
+    "${path.module}/user_data/init_esearch.tpl",
+    {
+      elasticsearch_cluster  = var.elasticsearch_cluster
+      elasticsearch_data_dir = var.elasticsearch_data_dir
+    }
+  )
 
   tags = {
     Name = "Elasticsearch instance"
   }
 }
 
-data "template_file" "init_logstash" {
-  template = file("./user_data/init_logstash.tpl")
-
-  vars = {
-    elasticsearch_host = aws_instance.elasticsearch.private_ip
-  }
-}
-
 resource "aws_instance" "logstash" {
-  ami           = var.aws_amis[var.aws_region]
-  instance_type = var.elk_instance_type
-  key_name      = var.aws_key_name
+  ami             = data.aws_ami.aws_amis.id
+  instance_type   = var.elk_instance_type
+  key_name        = var.aws_key_name
   security_groups = [module.security.esearch_sc_id]
   subnet_id       = module.network.elk_private_subnet_id
 
   ebs_block_device {
     device_name = "/dev/sdb"
-    volume_type = "io1"
+    volume_type = "io2"
     volume_size = "20"
     iops        = "500"
   }
 
-  user_data = data.template_file.init_logstash.rendered
+  user_data = templatefile(
+    "${path.module}/user_data/init_logstash.tpl",
+    {
+      elasticsearch_host = aws_instance.elasticsearch.private_ip
+    }
+  )
 
   tags = {
     Name = "Logstash instance"
   }
 }
 
-data "template_file" "init_kibana" {
-  template = file("./user_data/init_kibana.tpl")
-
-  vars = {
-    elasticsearch_host = aws_instance.elasticsearch.private_ip
-  }
-}
-
 resource "aws_instance" "kibana" {
-  ami           = var.aws_amis[var.aws_region]
-  instance_type = var.elk_instance_type
-  key_name      = var.aws_key_name
+  ami             = data.aws_ami.aws_amis.id
+  instance_type   = var.elk_instance_type
+  key_name        = var.aws_key_name
   security_groups = [module.security.elk_sc_id]
   subnet_id       = module.network.elk_public_subnet_id
 
@@ -105,7 +112,12 @@ resource "aws_instance" "kibana" {
     iops        = "500"
   }
 
-  user_data = data.template_file.init_kibana.rendered
+  user_data = templatefile(
+    "${path.module}/user_data/init_kibana.tpl",
+    {
+      elasticsearch_host = aws_instance.elasticsearch.private_ip
+    }
+  )
 
   tags = {
     Name = "Kibana instance"
